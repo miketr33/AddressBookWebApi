@@ -1,3 +1,5 @@
+using AddressBookWebApi.Repositories;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -11,15 +13,16 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowBlazorApp", builder =>
     {
-        builder.WithOrigins("http://localhost:7202") // Update with your Blazor app's URL
+        builder.WithOrigins("https://localhost:7202") 
             .AllowAnyHeader()
             .AllowAnyMethod();
     });
 });
+builder.Services.AddScoped<IAddressBookRepository, AddressBookRepository>();
 
 
 var app = builder.Build();
-app.UseCors("AllowBlazorApp");
+
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -31,7 +34,7 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
-
+app.UseCors("AllowBlazorApp");
 app.MapControllers();
 
 app.Run();
